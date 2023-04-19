@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
-import http from "http";
 
 //api setup
 const port = 3000;

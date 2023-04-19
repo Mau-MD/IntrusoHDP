@@ -3,6 +3,8 @@ import alarma from "/alarma.mp3";
 
 export class Alarm {
   container: HTMLDivElement;
+  private audioContainer: HTMLAudioElement | null = null;
+  private shown = false;
 
   constructor(container: HTMLDivElement) {
     this.container = container;
@@ -10,6 +12,7 @@ export class Alarm {
 
   setAlarm() {
     this.playAudio();
+    this.shown = true;
 
     const parent = DomUtils.createDivIn(
       this.container,
@@ -43,14 +46,24 @@ export class Alarm {
       "continue-button"
     );
     continueButton.textContent = "Continuar";
+    continueButton.onclick = () => {
+      this.shown = false;
+      parent.remove();
+      if (this.audioContainer === null) return;
+      this.audioContainer.pause();
+      this.audioContainer.currentTime = 0;
+    };
   }
 
   private playAudio() {
-    const audio = new Audio(alarma);
-    audio.addEventListener("canplaythrough", () => {
-      audio.play().catch((e) => {
+    this.audioContainer = new Audio(alarma);
+    this.audioContainer.addEventListener("canplaythrough", () => {
+      if (this.audioContainer === null) return;
+      this.audioContainer.play().catch((e) => {
         window.addEventListener("click", () => {
-          audio.play();
+          if (this.audioContainer === null) return;
+          if (!this.shown) return;
+          this.audioContainer.play();
         });
       });
     });

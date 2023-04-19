@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 app.get("/putos", (req, res) => {
     res.send("Hello World! y putos");
 });
+console.log("holaaaaa");
 // app.listen(port, () => {
 //   console.log(`Server running at http://localhost:${port}`);
 // });
