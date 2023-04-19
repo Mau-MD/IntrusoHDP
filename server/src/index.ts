@@ -1,8 +1,24 @@
 import express from "express";
 import cors from "cors";
+import { Server, Socket } from "socket.io";
+import { createServer } from "http";
+import http from "http";
 
-const app = express();
+//api setup
 const port = 3000;
+const app = express();
+
+// socket setup
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  /* options */
+});
+
+io.on("connection", (socket) => {
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+});
 
 app.use(cors());
 app.get("/", (req, res) => {
@@ -13,6 +29,7 @@ app.get("/putos", (req, res) => {
   res.send("Hello World! y putos");
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running at http://localhost:${port}`);
+// });
+httpServer.listen(port);
