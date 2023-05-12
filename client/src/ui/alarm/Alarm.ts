@@ -1,4 +1,4 @@
-import { DomUtils } from "../utils/DomUtils";
+import { DomUtils } from "../../utils/DomUtils";
 import alarma from "/alarma.mp3";
 
 export class Alarm {
@@ -11,12 +11,12 @@ export class Alarm {
   }
 
   setAlarm() {
-    this.playAudio();
+    this.handlePlayAudio();
     this.shown = true;
 
     const parent = DomUtils.createDivIn(
       this.container,
-      "w-[100vw] h-[100vh] bg-red-500 flex items-center justify-center flex-col",
+      "absolute w-[100vw] h-[100vh] top-0 bg-red-500 flex items-center justify-center flex-col",
       "alarm"
     );
 
@@ -55,17 +55,11 @@ export class Alarm {
     };
   }
 
-  private playAudio() {
+  private handlePlayAudio() {
     this.audioContainer = new Audio(alarma);
     this.audioContainer.addEventListener("canplaythrough", () => {
-      if (this.audioContainer === null) return;
-      this.audioContainer.play().catch((e) => {
-        window.addEventListener("click", () => {
-          if (this.audioContainer === null) return;
-          if (!this.shown) return;
-          this.audioContainer.play();
-        });
-      });
+      if (this.container.children.length == 0) return;
+      this.audioContainer?.play();
     });
   }
 }

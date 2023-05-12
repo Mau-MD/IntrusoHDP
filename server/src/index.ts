@@ -14,6 +14,9 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
+  socket.on("join", (room) => {
+    console.log("Joined room", room);
+  });
   socket.on("message", (data) => {
     console.log(data);
   });
@@ -29,6 +32,6 @@ app.get("/putos", (req, res) => {
 });
 
 // app.listen(port, () => {
-//   console.log(`Server running at http://localhost:${port}`);
+// console.log(`Server running at http://localhost:${port}`);
 // });
 httpServer.listen(port);
