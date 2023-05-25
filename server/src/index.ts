@@ -7,6 +7,10 @@ import { usersController } from "./controllers/usersController";
 const port = 3000;
 const app = express();
 
+type status = "HDP detectado" | "HDP todo bien";
+
+let state: status = "HDP detectado";
+
 // socket setup
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -16,14 +20,11 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join", (room) => {
-    console.log("Joined room", room);
-  });
-  socket.on("message", (data) => {
-    console.log(data);
-  });
   socket.on("apagar", () => {
-    console.log("apagando");
+    handleApagar(socket);
+  });
+  socket.on("encender", () => {
+    handleEncender(socket);
   });
 });
 
@@ -36,7 +37,18 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// app.listen(port, () => {
-// console.log(`Server running at http://localhost:${port}`);
-// });
 httpServer.listen(port);
+
+const handleApagar = (socket) => {
+  if (state === "HDP detectado") {
+    state = "HDP todo bien";
+    socket.send("HDP todo bien");
+  }
+};
+
+const handleEncender = (socket) => {
+  if (state === "HDP todo bien") {
+    state = "HDP detectado";
+    socket.send("HDP detectado");
+  }
+};
