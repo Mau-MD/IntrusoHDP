@@ -7,9 +7,9 @@ import { usersController } from "./controllers/usersController";
 const port = 3000;
 const app = express();
 
-type status = "HDP detectado" | "HDP todo bien";
+type status = "off" | "on";
 
-let state: status = "HDP detectado";
+let state: status = "off";
 
 // socket setup
 const httpServer = createServer(app);
@@ -40,15 +40,11 @@ app.get("/", (req, res) => {
 httpServer.listen(port);
 
 const handleApagar = (socket) => {
-  if (state === "HDP detectado") {
-    state = "HDP todo bien";
-    socket.send("HDP todo bien");
-  }
+  state = "off";
+  socket.emit("off");
 };
 
 const handleEncender = (socket) => {
-  if (state === "HDP todo bien") {
-    state = "HDP detectado";
-    socket.send("HDP detectado");
-  }
+  state = "on";
+  socket.emit("on");
 };

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { DomUtils } from "../../utils/DomUtils";
 
 const hackingSteps = [
@@ -35,8 +36,11 @@ export class Dashboard {
   private headerInterval: number;
   private mainContainer: HTMLDivElement;
 
-  constructor(container: HTMLDivElement) {
+  private cb: () => void;
+
+  constructor(container: HTMLDivElement, callback: () => void) {
     this.container = container;
+    this.cb = callback;
     this.header = DomUtils.createHeaderIn(
       container,
       "text-4xl font-bold",
@@ -64,14 +68,14 @@ export class Dashboard {
       "flex flex-col gap-2 m-auto h-full",
       ""
     );
-    DomUtils.createInputIn(
+    const userInput = DomUtils.createInputIn(
       form,
       "py-2 px-4 border-[#1aff1a] border-1 bg-transparent text-white w-[500px] focus:outline-none",
       "username",
       "text",
       "username"
     );
-    DomUtils.createInputIn(
+    const passwordInput = DomUtils.createInputIn(
       form,
       "py-2 px-4 border-[#1aff1a] border-1 bg-transparent text-white w-[500px] focus:outline-none",
       "password",
@@ -84,6 +88,23 @@ export class Dashboard {
       ""
     );
     btn.textContent = "Acceder";
+
+    btn.onclick = async () => {
+      try {
+        console.log(userInput.value, passwordInput.value);
+        const res = await axios.post("http://localhost:3000/users/login", {
+          user: userInput.value,
+          password: passwordInput.value,
+        });
+        console.log(res.data);
+        localStorage.setItem("admin", res.data.admin);
+        this.mainContainer.innerHTML = "";
+        this.cb();
+      } catch {
+        alert("nel");
+        localStorage.removeItem("admin");
+      }
+    };
   }
   private headerAnimation() {
     this.headerInterval = setInterval(() => {
@@ -124,7 +145,7 @@ export class Dashboard {
       );
       step += 1;
       if (step !== hackingSteps.length) {
-        setTimeout(handler, this.randomBetween(100, 1000));
+        setTimeout(handler, this.randomBetween(1, 2));
       } else {
         clearInterval(this.headerInterval);
         this.header.textContent = "Dashboard";

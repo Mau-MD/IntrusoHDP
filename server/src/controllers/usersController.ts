@@ -18,6 +18,7 @@ const database = {
   ],
 };
 
+router.use(express.json());
 router.get("/", (req, res) => {
   res.send("Users home page");
 });

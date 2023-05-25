@@ -12,9 +12,7 @@ class SetupMain {
     this.mainContainer = document.getElementById("app") as HTMLDivElement;
     this.mainContainer.className = "container mx-auto";
     this.alarm = new Alarm(this.mainContainer);
-    new Estado(this.mainContainer);
-    // new Dashboard(this.mainContainer);
-    // this.alarm.setAlarm();
+    new Dashboard(this.mainContainer, () => new Estado(this.mainContainer));
   }
 }
 

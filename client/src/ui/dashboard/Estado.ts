@@ -1,3 +1,4 @@
+import axios from "axios";
 import { DomUtils } from "../../utils/DomUtils";
 import { Socket, io } from "socket.io-client";
 
@@ -24,6 +25,13 @@ export class Estado {
       "estado"
     );
     estadoSistema.innerText = "Vigilando al HDP";
+
+    this.socket.on("on", () => {
+      estadoSistema.innerText = "Vigilando al HDP: ON";
+    });
+    this.socket.on("off", () => {
+      estadoSistema.innerText = "Vigilando al HDP: OFF";
+    });
 
     const apagarEncender = DomUtils.createDivIn(
       parent,
@@ -59,14 +67,14 @@ export class Estado {
       "flex flex-col gap-2 m-auto",
       ""
     );
-    DomUtils.createInputIn(
+    const userInput = DomUtils.createInputIn(
       form,
       "py-2 px-4 border-[#1aff1a] border-1 bg-transparent text-white focus:outline-none",
       "username",
       "text",
       "username"
     );
-    DomUtils.createInputIn(
+    const passwordInput = DomUtils.createInputIn(
       form,
       "py-2 px-4 border-[#1aff1a] border-1 bg-transparent text-white  focus:outline-none",
       "password",
@@ -79,5 +87,23 @@ export class Estado {
       ""
     );
     btn.textContent = "Acceder";
+
+    btn.onclick = async () => {
+      try {
+        console.log(userInput.value, passwordInput.value);
+        if (localStorage.getItem("admin") !== "true") {
+          alert("No eres admin");
+          return;
+        }
+        const res = await axios.post("http://localhost:3000/users/register", {
+          user: userInput.value,
+          password: passwordInput.value,
+        });
+        alert("muy bien");
+      } catch {
+        alert("nel");
+        localStorage.removeItem("admin");
+      }
+    };
   }
 }
