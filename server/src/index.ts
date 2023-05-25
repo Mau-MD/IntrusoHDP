@@ -4,14 +4,15 @@ import { Server, Socket } from "socket.io";
 import { createServer } from "http";
 import { usersController } from "./controllers/usersController";
 
-//api setup
 const port = 3000;
 const app = express();
 
 // socket setup
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  /* options */
+  cors: {
+    origin: "*",
+  },
 });
 
 io.on("connection", (socket) => {
@@ -21,9 +22,12 @@ io.on("connection", (socket) => {
   socket.on("message", (data) => {
     console.log(data);
   });
+  socket.on("apagar", () => {
+    console.log("apagando");
+  });
 });
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.use("/users", usersController);
