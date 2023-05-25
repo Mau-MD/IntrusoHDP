@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
+import { usersController } from "./controllers/usersController";
 
 const port = 3000;
 const app = express();
@@ -26,18 +27,13 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+app.use(cors({ origin: "*" }));
 app.use(express.json());
+
+app.use("/users", usersController);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
-
-app.get("/putos", (req, res) => {
-  res.send("Hello World! y putos");
 });
 
 // app.listen(port, () => {
