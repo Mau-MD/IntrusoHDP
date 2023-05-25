@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
+import { usersController } from "./controllers/usersController";
 
 //api setup
 const port = 3000;
@@ -23,12 +24,12 @@ io.on("connection", (socket) => {
 });
 
 app.use(cors());
+app.use(express.json());
+
+app.use("/users", usersController);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
-
-app.get("/putos", (req, res) => {
-  res.send("Hello World! y putos");
 });
 
 // app.listen(port, () => {
