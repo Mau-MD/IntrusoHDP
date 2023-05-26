@@ -9,7 +9,10 @@ const app = express();
 
 type status = "off" | "on";
 
+type alarma = "off" | "on";
+
 let state: status = "off";
+let alarma: alarma = "off";
 
 // socket setup
 const httpServer = createServer(app);
@@ -25,6 +28,12 @@ io.on("connection", (socket) => {
   });
   socket.on("encender", () => {
     handleEncender(socket);
+  });
+  socket.on("encenderAlarma", () => {
+    handleEncenderAlarma(socket);
+  });
+  socket.on("apagarAlarma", () => {
+    handleApagarAlarma(socket);
   });
 });
 
@@ -47,4 +56,14 @@ const handleApagar = (socket) => {
 const handleEncender = (socket) => {
   state = "on";
   socket.emit("on");
+};
+
+const handleEncenderAlarma = (socket) => {
+  alarma = "on";
+  socket.emit("alarma_on");
+};
+
+const handleApagarAlarma = (socket) => {
+  alarma = "off";
+  socket.emit("alarma_off");
 };
