@@ -24,10 +24,10 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
   socket.on("apagar", () => {
-    handleApagar(socket);
+    handleApagarSistema(socket);
   });
   socket.on("encender", () => {
-    handleEncender(socket);
+    handleEncenderSistema(socket);
   });
   socket.on("encenderAlarma", () => {
     handleEncenderAlarma(socket);
@@ -48,12 +48,12 @@ app.get("/", (req, res) => {
 
 httpServer.listen(port);
 
-const handleApagar = (socket) => {
+const handleApagarSistema = (socket) => {
   state = "off";
   socket.emit("off");
 };
 
-const handleEncender = (socket) => {
+const handleEncenderSistema = (socket) => {
   state = "on";
   socket.emit("on");
 };
